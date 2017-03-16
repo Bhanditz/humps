@@ -7,29 +7,34 @@
 // humps is copyright © 2012+ Dom Christie
 // Released under the MIT license.
 
-
-;(function(global) {
-
+(function(global) {
   var _processKeys = function(convert, obj, options) {
-    if(!_isObject(obj) || _isDate(obj) || _isRegExp(obj) || _isBoolean(obj) || _isFunction(obj)) {
+    if (
+      !_isObject(obj) ||
+      _isDate(obj) ||
+      _isRegExp(obj) ||
+      _isBoolean(obj) ||
+      _isFunction(obj)
+    ) {
       return obj;
     }
 
-    var output,
-        i = 0,
-        l = 0;
+    var output, i = 0, l = 0;
 
-    if(_isArray(obj)) {
+    if (_isArray(obj)) {
       output = [];
-      for(l=obj.length; i<l; i++) {
+      for (l = obj.length; i < l; i++) {
         output.push(_processKeys(convert, obj[i], options));
       }
-    }
-    else {
+    } else {
       output = {};
-      for(var key in obj) {
-        if(obj.hasOwnProperty(key)) {
-          output[convert(key, options)] = _processKeys(convert, obj[key], options);
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          output[convert(key, options)] = _processKeys(
+            convert,
+            obj[key],
+            options
+          );
         }
       }
     }
@@ -50,7 +55,7 @@
     if (_isNumerical(string)) {
       return string;
     }
-    string = string.replace(/[\-_\s]+(.)?/g, function(match, chr) {
+    string = string.replace(/[\_\s]+(.)?/g, function(match, chr) {
       return chr ? chr.toUpperCase() : '';
     });
     // Ensure 1st char is always lowercase
@@ -73,7 +78,7 @@
   var toString = Object.prototype.toString;
 
   var _isFunction = function(obj) {
-    return typeof(obj) === 'function';
+    return typeof obj === 'function';
   };
   var _isObject = function(obj) {
     return obj === Object(obj);
@@ -102,13 +107,13 @@
   var _processor = function(convert, options) {
     var callback = options && 'process' in options ? options.process : options;
 
-    if(typeof(callback) !== 'function') {
+    if (typeof callback !== 'function') {
       return convert;
     }
 
     return function(string, options) {
       return callback(string, convert, options);
-    }
+    };
   };
 
   var humps = {
@@ -125,9 +130,9 @@
     pascalizeKeys: function(object, options) {
       return _processKeys(_processor(pascalize, options), object);
     },
-    depascalizeKeys: function () {
+    depascalizeKeys: function() {
       return this.decamelizeKeys.apply(this, arguments);
-    }
+    },
   };
 
   if (typeof define === 'function' && define.amd) {
@@ -137,5 +142,4 @@
   } else {
     global.humps = humps;
   }
-
 })(this);
